@@ -9,11 +9,13 @@ export type Profile = {
 export type Exhibition = {
   id: string
   title: string
-  description: string
+  description: string | null
   image_url: string | null
   start_date: string
   end_date: string
   location: string
+  city: string | null
+  official_url: string | null
   created_at: string
 }
 

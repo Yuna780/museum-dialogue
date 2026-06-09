@@ -11,8 +11,8 @@ export type Exhibition = {
   title: string
   description: string | null
   image_url: string | null
-  start_date: string
-  end_date: string
+  start_date: string | null
+  end_date: string | null
   location: string
   city: string | null
   official_url: string | null

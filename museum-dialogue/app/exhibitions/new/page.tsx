@@ -30,7 +30,7 @@ export default function NewExhibitionPage() {
     e.preventDefault();
     setError(null);
 
-    if (new Date(form.start_date) > new Date(form.end_date)) {
+    if (form.start_date && form.end_date && new Date(form.start_date) > new Date(form.end_date)) {
       setError("終了日は開始日より後にしてください");
       return;
     }
@@ -46,8 +46,8 @@ export default function NewExhibitionPage() {
         title: form.title,
         location: form.location,
         city: form.city || null,
-        start_date: form.start_date,
-        end_date: form.end_date,
+        start_date: form.start_date || null,
+        end_date: form.end_date || null,
         description: form.description || null,
         official_url: form.official_url || null,
         image_url: form.image_url || null,
@@ -110,21 +110,19 @@ export default function NewExhibitionPage() {
           </Field>
 
           <div className="grid grid-cols-2 gap-3">
-            <Field label="開始日" required>
+            <Field label="開始日">
               <input
                 type="date"
                 value={form.start_date}
                 onChange={set("start_date")}
-                required
                 className={inputClass}
               />
             </Field>
-            <Field label="終了日" required>
+            <Field label="終了日">
               <input
                 type="date"
                 value={form.end_date}
                 onChange={set("end_date")}
-                required
                 min={form.start_date}
                 className={inputClass}
               />

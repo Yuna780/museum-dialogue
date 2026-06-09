@@ -24,3 +24,21 @@ export function timeAgo(dateString: string) {
   if (days < 30) return `${days}日前`
   return formatDate(dateString)
 }
+
+// 元の投稿からどれくらい後に書かれたか
+export function timeAfterOriginal(originalDate: string, noteDate: string): string {
+  const origin = new Date(originalDate).getTime()
+  const note = new Date(noteDate).getTime()
+  const diff = note - origin
+  if (diff < 0) return '同日'
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+  if (days === 0) return '当日に追記'
+  if (days < 7) return `${days}日後に追記`
+  if (days < 30) return `${Math.floor(days / 7)}週間後に追記`
+  const months = Math.floor(days / 30)
+  if (months < 12) return `${months}ヶ月後に追記`
+  const years = Math.floor(months / 12)
+  const remMonths = months % 12
+  if (remMonths === 0) return `${years}年後に追記`
+  return `${years}年${remMonths}ヶ月後に追記`
+}

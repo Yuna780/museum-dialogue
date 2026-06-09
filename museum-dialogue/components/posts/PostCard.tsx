@@ -6,6 +6,7 @@ import { timeAgo } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
 import PostForm from './PostForm'
 import CommentSection from '@/components/comments/CommentSection'
+import AfterNotes from './AfterNotes'
 
 interface PostCardProps {
   post: Post
@@ -119,6 +120,16 @@ export default function PostCard({ post, currentUserId, onDeleted, onUpdated }: 
           <CommentSection postId={post.id} currentUserId={currentUserId} />
         </div>
       )}
+
+      {/* After Notes */}
+      <div className="mt-4 pt-4 border-t border-gray-50">
+        <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-3">After Notes</p>
+        <AfterNotes
+          postId={post.id}
+          postCreatedAt={post.created_at}
+          currentUserId={currentUserId}
+        />
+      </div>
     </div>
   )
 }

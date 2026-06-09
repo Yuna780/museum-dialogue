@@ -34,11 +34,21 @@ export default async function ExhibitionsPage() {
         <div className="text-center py-20 text-gray-400">
           <p className="text-5xl mb-4">🖼</p>
           <p className="mb-4">展覧会が登録されていません</p>
-          <Link href="/exhibitions/new" className="text-sm text-gray-700 font-medium hover:underline">
-            最初の展覧会を追加する →
-          </Link>
         </div>
       )}
+
+      {/* 見つからない場合のCTA */}
+      <div className="mt-10 border-t border-gray-100 pt-8 text-center">
+        <p className="text-sm text-gray-400 mb-3">お探しの展覧会が見つかりませんか？</p>
+        <Link
+          href="/exhibitions/new"
+          className="inline-flex items-center gap-2 text-sm text-gray-600 border border-gray-200 rounded-full px-5 py-2.5 hover:border-gray-400 hover:text-gray-900 transition-colors"
+        >
+          <span>+</span>
+          <span>展覧会を追加する</span>
+        </Link>
+        <p className="text-xs text-gray-400 mt-2">1分以内で登録できます</p>
+      </div>
     </div>
   );
 }

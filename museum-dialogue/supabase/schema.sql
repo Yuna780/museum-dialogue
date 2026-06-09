@@ -80,9 +80,29 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure handle_new_user();
 
--- sample exhibitions
-insert into exhibitions (title, description, image_url, start_date, end_date, location) values
-('印象派の光と影', 'モネ、ルノワール、ドガなど印象派の巨匠たちが描いた光と影の世界をご覧ください。', 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800', '2024-01-15', '2024-04-30', '東京都美術館'),
-('現代アートの境界線', '国内外の現代アーティストが挑む、アートの新たな可能性。', 'https://images.unsplash.com/photo-1549490349-8643362247b5?w=800', '2024-02-01', '2024-05-31', '森美術館'),
-('縄文から弥生へ', '日本の夜明け、縄文文化から弥生文化への移り変わりを貴重な出土品とともに辿る。', 'https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=800', '2024-03-10', '2024-06-30', '国立博物館'),
-('写真が語る昭和', '昭和の日常を切り取った写真の数々。懐かしくも新鮮な時代の記録。', 'https://images.unsplash.com/photo-1452421822248-d4c2b47f0c81?w=800', '2024-04-01', '2024-07-15', '写真美術館');
+-- real exhibitions seed (remove fictional data before running)
+insert into exhibitions (title, description, official_url, start_date, end_date, location, city) values
+(
+  'モネ 睡蓮のとき',
+  'クロード・モネが晩年に取り組んだ「睡蓮」連作を中心に、国立西洋美術館の所蔵作品と海外からの借用作品で構成。モネの眼と光の探求に迫る大規模回顧展。',
+  'https://www.nmwa.go.jp/jp/exhibitions/2024monet.html',
+  '2024-10-05', '2025-02-11', '国立西洋美術館', '東京'
+),
+(
+  'デ・キリコ展',
+  '形而上絵画の創始者ジョルジョ・デ・キリコの全貌を紹介する日本初の大規模回顧展。初期から晩年まで約140点を展示。',
+  'https://dechirico.exhibit.jp',
+  '2024-04-27', '2024-08-29', '東京都美術館', '東京'
+),
+(
+  'マティス展',
+  'アンリ・マティスの画業を回顧する大規模展覧会。油彩、素描、版画、彫刻、切り紙絵など多彩な作品約150点を展示。',
+  'https://matisse2023.jp',
+  '2023-04-27', '2023-08-20', '東京都現代美術館', '東京'
+),
+(
+  'ルーヴル美術館展 愛を描く',
+  'ルーヴル美術館が所蔵する絵画作品の中から「愛」をテーマに73点を厳選。西洋絵画における愛の表現の変遷をたどる。',
+  'https://louvre2023.jp',
+  '2023-03-01', '2023-05-22', '国立新美術館', '東京'
+);

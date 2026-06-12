@@ -20,7 +20,13 @@ export default function SignupForm() {
     setError(null)
     setLoading(true)
 
-    const { data, error: signUpError } = await supabase.auth.signUp({ email, password })
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
+    })
     if (signUpError) {
       setError(signUpError.message)
       setLoading(false)
@@ -31,8 +37,7 @@ export default function SignupForm() {
       await supabase.from('profiles').upsert({ id: data.user.id, username })
     }
 
-    router.push('/exhibitions')
-    router.refresh()
+    router.push('/auth/verify-email')
   }
 
   return (

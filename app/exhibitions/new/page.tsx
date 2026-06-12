@@ -44,7 +44,7 @@ export default function NewExhibitionPage() {
       .from("exhibitions")
       .insert({
         title: form.title,
-        location: form.location,
+        location: form.location || null,
         city: form.city || null,
         start_date: form.start_date || null,
         end_date: form.end_date || null,
@@ -88,22 +88,25 @@ export default function NewExhibitionPage() {
               className={inputClass}
             />
           </Field>
+        </div>
 
-          <Field label="会場名" required>
+        {/* 任意フィールド */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-5 space-y-4">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">任意項目</p>
+
+          <Field label="会場名">
             <input
               value={form.location}
               onChange={set("location")}
-              required
               placeholder="例：国立西洋美術館"
               className={inputClass}
             />
           </Field>
 
-          <Field label="都市" required>
+          <Field label="都市">
             <input
               value={form.city}
               onChange={set("city")}
-              required
               placeholder="例：東京"
               className={inputClass}
             />
@@ -128,11 +131,6 @@ export default function NewExhibitionPage() {
               />
             </Field>
           </div>
-        </div>
-
-        {/* 任意フィールド */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-5 space-y-4">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">任意項目</p>
 
           <Field label="説明">
             <textarea

@@ -22,7 +22,7 @@ export default function ForgotPasswordForm() {
     })
 
     if (error) {
-      setError('メールの送信に失敗しました。もう一度お試しください。')
+      setError(`メールの送信に失敗しました: ${error.message}`)
       setLoading(false)
       return
     }

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import Button from '@/components/ui/Button'
+import GoogleSignInButton from '@/components/auth/GoogleSignInButton'
 
 export default function SignupForm() {
   const [email, setEmail] = useState('')
@@ -85,6 +86,15 @@ export default function SignupForm() {
           ログイン
         </Link>
       </p>
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-gray-200" />
+        </div>
+        <div className="relative flex justify-center text-xs text-gray-400">
+          <span className="bg-white px-2">または</span>
+        </div>
+      </div>
+      <GoogleSignInButton />
     </form>
   )
 }

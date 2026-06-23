@@ -81,14 +81,17 @@ export default function PostCard({ post, exhibition, currentUserId, onDeleted, o
 
   const handleShareX = () => {
     const exhibitionLine = exhibition?.title ? `【${exhibition.title}】\n` : ''
-    const suffix = `\n\n続きはこちら👇\n${shareUrl}`
-    const budget = 280 - exhibitionLine.length - suffix.length - 23 + shareUrl.length
+    // Xの文字数換算: URL=23文字、それ以外は1文字
+    const suffixWithoutUrl = '\n\n続きはこちら👇\n'
+    const urlCharCount = 23
+    const fixedCount = exhibitionLine.length + suffixWithoutUrl.length + urlCharCount
+    const budget = 280 - fixedCount - 3 // 3文字の余裕
     const raw = [
       post.prompt4 ? `「${post.prompt4}」` : '',
       post.content || '',
     ].filter(Boolean).join('\n')
-    const preview = raw.length <= budget ? raw : raw.slice(0, Math.max(0, budget - 3)) + '...'
-    const text = `${exhibitionLine}${preview}${suffix}`
+    const preview = raw.length <= budget ? raw : raw.slice(0, budget) + '...'
+    const text = `${exhibitionLine}${preview}${suffixWithoutUrl}${shareUrl}`
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')
   }
 

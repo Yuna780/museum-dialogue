@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Post } from '@/lib/types'
+import { Post, Exhibition } from '@/lib/types'
 import { timeAgo } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
 import PostForm from './PostForm'
@@ -10,12 +10,31 @@ import AfterNotes from './AfterNotes'
 
 interface PostCardProps {
   post: Post
+  exhibition?: Exhibition
   currentUserId?: string
   onDeleted: (id: string) => void
   onUpdated: (post: Post) => void
 }
 
-export default function PostCard({ post, currentUserId, onDeleted, onUpdated }: PostCardProps) {
+function toHashtag(str: string): string {
+  return str.replace(/[\s\t\n\r　]/g, '')
+}
+
+function buildHashtags(exhibitionTitle?: string, location?: string | null): string[] {
+  const tags: string[] = ['#MuseumDialogue', '#展覧会記録']
+  if (exhibitionTitle) {
+    const tag = toHashtag(exhibitionTitle)
+    tags.push(`#${tag}`)
+    if (tag.length > 20) tags.push(`#${tag.slice(0, 10)}`)
+  }
+  if (location) {
+    const loc = toHashtag(location)
+    if (loc) tags.push(`#${loc}`)
+  }
+  return [...new Set(tags)]
+}
+
+export default function PostCard({ post, exhibition, currentUserId, onDeleted, onUpdated }: PostCardProps) {
   const [liked, setLiked] = useState(post.user_has_liked ?? false)
   const [likesCount, setLikesCount] = useState(post.likes_count ?? 0)
   const [editing, setEditing] = useState(false)
@@ -49,20 +68,28 @@ export default function PostCard({ post, currentUserId, onDeleted, onUpdated }: 
   ]
   const promptAnswers = [post.prompt1, post.prompt2, post.prompt3, post.prompt4]
 
-  const shareText = [
-    post.prompt4 ? `「${post.prompt4}」` : '',
-    post.content || '',
-  ].filter(Boolean).join('\n')
-
   const shareUrl = typeof window !== 'undefined' ? window.location.href : ''
 
+  const buildSharePreview = (): string => {
+    const raw = [
+      post.prompt4 ? `「${post.prompt4}」` : '',
+      post.content || '',
+    ].filter(Boolean).join('\n')
+    if (raw.length <= 100) return raw
+    return raw.slice(0, 100) + '...'
+  }
+
   const handleShareX = () => {
-    const text = encodeURIComponent(`${shareText}\n#MuseumDialogue`)
-    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(shareUrl)}`, '_blank')
+    const preview = buildSharePreview()
+    const hashtags = buildHashtags(exhibition?.title, exhibition?.location).join('\n')
+    const text = `${preview}\n\n続きはこちら👇\n${shareUrl}\n\n${hashtags}`
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')
   }
 
   const handleShareInstagram = async () => {
-    const text = `${shareText}\n${shareUrl}\n#MuseumDialogue`
+    const preview = buildSharePreview()
+    const hashtags = buildHashtags(exhibition?.title, exhibition?.location).join('\n')
+    const text = `${preview}\n\n続きはこちら👇\n${shareUrl}\n\n${hashtags}`
     if (navigator.share) {
       await navigator.share({ text })
     } else {

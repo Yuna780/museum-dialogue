@@ -125,6 +125,7 @@ export default function ExhibitionDetailPage() {
             <PostCard
               key={post.id}
               post={post}
+              exhibition={exhibition ?? undefined}
               currentUserId={currentUserId}
               onDeleted={(id) => setPosts((prev) => prev.filter((p) => p.id !== id))}
               onUpdated={(updated) => setPosts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)))}

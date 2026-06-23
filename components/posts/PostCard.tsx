@@ -82,7 +82,8 @@ export default function PostCard({ post, exhibition, currentUserId, onDeleted, o
   const handleShareX = () => {
     const preview = buildSharePreview()
     const hashtags = buildHashtags(exhibition?.title, exhibition?.location).join('\n')
-    const text = `${preview}\n\n続きはこちら👇\n${shareUrl}\n\n${hashtags}`
+    const exhibitionLine = exhibition?.title ? `【${exhibition.title}】\n` : ''
+    const text = `${exhibitionLine}${preview}\n\n続きはこちら👇\n${shareUrl}\n\n${hashtags}`
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')
   }
 

@@ -81,14 +81,13 @@ export default function PostCard({ post, exhibition, currentUserId, onDeleted, o
 
   const handleShareX = () => {
     const exhibitionLine = exhibition?.title ? `【${exhibition.title}】\n` : ''
-    const hashtags = '#MuseumDialogue\n#展覧会記録'
-    const suffix = `\n\n続きはこちら👇\n${shareUrl}\n\n${hashtags}`
-    const budget = 280 - exhibitionLine.length - suffix.length - 23 // URLは23文字換算
+    const suffix = `\n\n続きはこちら👇\n${shareUrl}`
+    const budget = 280 - exhibitionLine.length - suffix.length - 23 + shareUrl.length
     const raw = [
       post.prompt4 ? `「${post.prompt4}」` : '',
       post.content || '',
     ].filter(Boolean).join('\n')
-    const preview = raw.length <= budget ? raw : raw.slice(0, budget) + '...'
+    const preview = raw.length <= budget ? raw : raw.slice(0, Math.max(0, budget - 3)) + '...'
     const text = `${exhibitionLine}${preview}${suffix}`
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')
   }

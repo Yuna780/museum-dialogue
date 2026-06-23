@@ -45,8 +45,31 @@ export default function PostCard({ post, currentUserId, onDeleted, onUpdated }: 
     '一番印象に残った作品は？',
     'それはなぜですか？',
     '他の来場者の意見で、見方が変わりましたか？',
+    'この展覧会に自分なりのタイトルをつけるとしたら？',
   ]
-  const promptAnswers = [post.prompt1, post.prompt2, post.prompt3]
+  const promptAnswers = [post.prompt1, post.prompt2, post.prompt3, post.prompt4]
+
+  const shareText = [
+    post.prompt4 ? `「${post.prompt4}」` : '',
+    post.content || '',
+  ].filter(Boolean).join('\n')
+
+  const shareUrl = typeof window !== 'undefined' ? window.location.href : ''
+
+  const handleShareX = () => {
+    const text = encodeURIComponent(`${shareText}\n#MuseumDialogue`)
+    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(shareUrl)}`, '_blank')
+  }
+
+  const handleShareInstagram = async () => {
+    const text = `${shareText}\n${shareUrl}\n#MuseumDialogue`
+    if (navigator.share) {
+      await navigator.share({ text })
+    } else {
+      await navigator.clipboard.writeText(text)
+      alert('テキストをコピーしました。Instagramに貼り付けてください。')
+    }
+  }
 
   if (editing) {
     return (
@@ -56,6 +79,7 @@ export default function PostCard({ post, currentUserId, onDeleted, onUpdated }: 
         initialPrompt1={post.prompt1 ?? ''}
         initialPrompt2={post.prompt2 ?? ''}
         initialPrompt3={post.prompt3 ?? ''}
+        initialPrompt4={post.prompt4 ?? ''}
         postId={post.id}
         onSaved={updated => { onUpdated(updated); setEditing(false) }}
         onCancel={() => setEditing(false)}
@@ -114,6 +138,28 @@ export default function PostCard({ post, currentUserId, onDeleted, onUpdated }: 
         >
           💬 <span>{post.comments_count ?? 0}</span>
         </button>
+        <div className="ml-auto flex items-center gap-2">
+          <button
+            onClick={handleShareX}
+            className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 transition-colors"
+            title="Xでシェア"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.91-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+            シェア
+          </button>
+          <button
+            onClick={handleShareInstagram}
+            className="flex items-center gap-1 text-xs text-gray-400 hover:text-pink-500 transition-colors"
+            title="Instagramでシェア"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+            </svg>
+            シェア
+          </button>
+        </div>
       </div>
       {showComments && (
         <div className="mt-4">

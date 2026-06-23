@@ -27,6 +27,7 @@ export type Post = {
   prompt1: string | null
   prompt2: string | null
   prompt3: string | null
+  prompt4: string | null
   created_at: string
   updated_at: string
   profile?: Profile

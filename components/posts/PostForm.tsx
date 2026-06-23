@@ -12,6 +12,7 @@ interface PostFormProps {
   initialPrompt1?: string
   initialPrompt2?: string
   initialPrompt3?: string
+  initialPrompt4?: string
   onSaved: (post: Post) => void
   onCancel?: () => void
 }
@@ -20,26 +21,28 @@ const PROMPTS = [
   { key: 'prompt1', label: '一番印象に残った作品は？' },
   { key: 'prompt2', label: 'それはなぜですか？' },
   { key: 'prompt3', label: '他の来場者の意見で、見方が変わりましたか？' },
+  { key: 'prompt4', label: 'この展覧会に自分なりのタイトルをつけるとしたら？' },
 ] as const
 
 export default function PostForm({
   exhibitionId, postId,
   initialContent = '',
-  initialPrompt1 = '', initialPrompt2 = '', initialPrompt3 = '',
+  initialPrompt1 = '', initialPrompt2 = '', initialPrompt3 = '', initialPrompt4 = '',
   onSaved, onCancel
 }: PostFormProps) {
   const [content, setContent] = useState(initialContent)
   const [prompt1, setPrompt1] = useState(initialPrompt1)
   const [prompt2, setPrompt2] = useState(initialPrompt2)
   const [prompt3, setPrompt3] = useState(initialPrompt3)
+  const [prompt4, setPrompt4] = useState(initialPrompt4)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const supabase = createClient()
 
-  const promptSetters = [setPrompt1, setPrompt2, setPrompt3]
-  const promptValues = [prompt1, prompt2, prompt3]
+  const promptSetters = [setPrompt1, setPrompt2, setPrompt3, setPrompt4]
+  const promptValues = [prompt1, prompt2, prompt3, prompt4]
 
-  const hasContent = content.trim() || prompt1.trim() || prompt2.trim() || prompt3.trim()
+  const hasContent = content.trim() || prompt1.trim() || prompt2.trim() || prompt3.trim() || prompt4.trim()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -52,6 +55,7 @@ export default function PostForm({
       prompt1: prompt1 || null,
       prompt2: prompt2 || null,
       prompt3: prompt3 || null,
+      prompt4: prompt4 || null,
     }
 
     if (postId) {
@@ -79,6 +83,7 @@ export default function PostForm({
         setPrompt1('')
         setPrompt2('')
         setPrompt3('')
+        setPrompt4('')
       }
     }
     setLoading(false)

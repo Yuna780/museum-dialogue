@@ -106,14 +106,16 @@ export default function PostCard({ post, exhibition, currentUserId, onDeleted, o
 
   const handleShareX = () => {
     const exhibitionLine = exhibition?.title ? `【${exhibition.title}】\n` : ''
+    const museumTag = exhibition?.location ? `\n#${toHashtag(exhibition.location)}` : ''
     const suffixWithoutUrl = '\n\n続きはこちら👇\n'
-    const budget = 280 - xCharCount(exhibitionLine) - xCharCount(suffixWithoutUrl) - 23
+    const suffix = suffixWithoutUrl + shareUrl + museumTag
+    const budget = 280 - xCharCount(exhibitionLine) - xCharCount(suffixWithoutUrl) - 23 - xCharCount(museumTag)
     const raw = [
       post.prompt4 ? `「${post.prompt4}」` : '',
       post.content || '',
     ].filter(Boolean).join('\n')
     const preview = truncateToXBudget(raw, budget)
-    const text = `${exhibitionLine}${preview}${suffixWithoutUrl}${shareUrl}`
+    const text = `${exhibitionLine}${preview}${suffixWithoutUrl}${shareUrl}${museumTag}`
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')
   }
 

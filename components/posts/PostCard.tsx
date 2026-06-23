@@ -20,6 +20,31 @@ function toHashtag(str: string): string {
   return str.replace(/[\s\t\n\r　]/g, '')
 }
 
+// Xの文字数カウント: CJK・絵文字=2、Latin等=1、URL=23
+const X_WEIGHT1_RANGES: [number, number][] = [
+  [0, 4351], [8192, 8205], [8208, 8223], [8242, 8247],
+]
+function xCharCount(text: string): number {
+  let count = 0
+  for (const char of text) {
+    const cp = char.codePointAt(0)!
+    count += X_WEIGHT1_RANGES.some(([s, e]) => cp >= s && cp <= e) ? 1 : 2
+  }
+  return count
+}
+function truncateToXBudget(text: string, budget: number): string {
+  let count = 0
+  let i = 0
+  for (const char of text) {
+    const cp = char.codePointAt(0)!
+    const w = X_WEIGHT1_RANGES.some(([s, e]) => cp >= s && cp <= e) ? 1 : 2
+    if (count + w > budget - 3) return text.slice(0, i) + '...'
+    count += w
+    i += char.length
+  }
+  return text
+}
+
 function buildHashtags(exhibitionTitle?: string, location?: string | null): string[] {
   const tags: string[] = ['#MuseumDialogue', '#展覧会記録']
   if (exhibitionTitle) {
@@ -81,16 +106,13 @@ export default function PostCard({ post, exhibition, currentUserId, onDeleted, o
 
   const handleShareX = () => {
     const exhibitionLine = exhibition?.title ? `【${exhibition.title}】\n` : ''
-    // Xの文字数換算: URL=23文字、それ以外は1文字
     const suffixWithoutUrl = '\n\n続きはこちら👇\n'
-    const urlCharCount = 23
-    const fixedCount = exhibitionLine.length + suffixWithoutUrl.length + urlCharCount
-    const budget = 280 - fixedCount - 3 // 3文字の余裕
+    const budget = 280 - xCharCount(exhibitionLine) - xCharCount(suffixWithoutUrl) - 23
     const raw = [
       post.prompt4 ? `「${post.prompt4}」` : '',
       post.content || '',
     ].filter(Boolean).join('\n')
-    const preview = raw.length <= budget ? raw : raw.slice(0, budget) + '...'
+    const preview = truncateToXBudget(raw, budget)
     const text = `${exhibitionLine}${preview}${suffixWithoutUrl}${shareUrl}`
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')
   }

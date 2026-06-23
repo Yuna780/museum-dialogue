@@ -44,7 +44,7 @@ export default function TimelinePage() {
     const postsWithMeta = await Promise.all(
       data.map(async (post) => {
         const { data: profile } = await supabase.from("profiles").select("*").eq("id", post.user_id).single();
-        const { data: exhibition } = await supabase.from("exhibitions").select("title").eq("id", post.exhibition_id).single();
+        const { data: exhibition } = await supabase.from("exhibitions").select("*").eq("id", post.exhibition_id).single();
         const { count: likesCount } = await supabase.from("likes").select("*", { count: "exact", head: true }).eq("post_id", post.id);
         const { count: commentsCount } = await supabase.from("comments").select("*", { count: "exact", head: true }).eq("post_id", post.id);
         let userHasLiked = false;
@@ -145,6 +145,7 @@ export default function TimelinePage() {
               </div>
               <PostCard
                 post={post}
+                exhibition={(post as Post & { exhibition?: Exhibition }).exhibition}
                 currentUserId={currentUserId}
                 onDeleted={(id) => setPosts((prev) => prev.filter((p) => p.id !== id))}
                 onUpdated={(updated) => setPosts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)))}
